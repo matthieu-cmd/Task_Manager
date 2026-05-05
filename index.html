@@ -1699,10 +1699,12 @@
 
   function saveEdit(id) {
     const el = document.getElementById('edit-' + id);
+    const dateEl = document.getElementById('edit-date-' + id);
     if (el) {
       const val = el.value.trim();
       const t = tasks.find(t => t.id === id);
       if (t && val) { t.text = val; t.tags = extractTags(val); }
+      if (t && dateEl) { t.dueDate = dateEl.value || null; }
     }
     editingId = null;
     save(); render();
@@ -2138,6 +2140,9 @@
     const textEl = isEdit
       ? '<input class="edit-input" id="edit-' + t.id + '" value="' + escHtml(t.text) + '" ' +
         'onkeydown="if(event.key===\'Enter\')saveEdit(' + t.id + ');if(event.key===\'Escape\'){editingId=null;render()}" ' +
+        'onblur="if(event.relatedTarget&&event.relatedTarget.id===\'edit-date-' + t.id + '\'){}else saveEdit(' + t.id + ')" />' +
+        '<input type="date" class="edit-input" id="edit-date-' + t.id + '" value="' + (t.dueDate||'') + '" ' +
+        'onkeydown="if(event.key===\'Escape\'){editingId=null;render()}" ' +
         'onblur="saveEdit(' + t.id + ')" />'
       : '<div class="task-text ' + (t.done ? 'done' : '') + '">' + escHtml(t.text) + '</div>';
 
